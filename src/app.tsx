@@ -47,7 +47,7 @@ export function App() {
       reader.onload = () => {
         //@ts-ignore
         const data: string = reader.result
-        let lines = data.replace("\r","").split("\n")
+        let lines = data.replace("\r","").split("\n").filter((x,i) => i % 3 == 0)
         let graphData: any[][] = []
         lines.forEach((line: string) => {
           let charts: string[];
@@ -55,12 +55,13 @@ export function App() {
           [x, ...charts] = line.split(";")
           charts.forEach((chart, index) => {
             if (graphData.length < index + 1){
-              let color = Object.keys(COLORS)[index]
+              let letter = String.fromCharCode(65 + index)
+              let color = Object.keys(COLORS).includes(letter) ? COLORS[letter] : "#" + Math.floor(Math.random()*16777215).toString(16)
               graphData.push({
                 //@ts-ignore
-                label: color,
+                label: letter,
                 data: [],
-                borderColor: COLORS[color],
+                borderColor: color,
                 showLine: true,
                 pointStyle: false,
               })
@@ -104,8 +105,8 @@ export function App() {
         options: {
           scales: {
             x: {
-              min: -1,
-              max: 1,
+              //min: -1,
+              //max: 1,
               title: {
                 text:"Temps [secondes]",
                 display: true
@@ -120,6 +121,9 @@ export function App() {
           },
           plugins: {
             zoom: {
+              pan: {
+                enabled: true,
+              },
               zoom: {
                 wheel: {
                   enabled: true,
