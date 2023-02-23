@@ -9,7 +9,7 @@ import {
     LineElement,
     PointElement,
     Legend,
-    ScatterController
+    ScatterController, Title
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 import {CrossCircledIcon, ExitFullScreenIcon, GearIcon, EnterFullScreenIcon} from "@radix-ui/react-icons";
@@ -18,6 +18,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {Resizable} from "re-resizable";
 import {GraphWindow, useGraphStore} from "../stores/graphes";
 import {assignInlineVars} from "@vanilla-extract/dynamic";
+import SettingsModal from "./SettingsModal";
 
 const plugin = {
     id: 'customCanvasBackgroundColor',
@@ -33,7 +34,7 @@ const plugin = {
 };
 
 
-Chart.register(LinearScale, Filler, ScatterController, PointElement, LineController, zoomPlugin, LineElement, Legend, plugin)
+Chart.register(LinearScale, Filler, ScatterController, PointElement, LineController, zoomPlugin, LineElement, Legend, plugin, Title)
 
 interface GraphProps {
     graph: GraphWindow;
@@ -78,8 +79,11 @@ export default function Graph(props: GraphProps) {
 
 
     return !destroyed ? (
-        <div style={assignInlineVars({[zIndexVar]: props.graph.zIndex.toString()} )}>
-            <Draggable onStart={zIndexUpdate} defaultClassName={DraggableStyle[fullscreen ? "fullscreen" : "floating"]} handle={"." + Toolbar}>
+        //<div style={assignInlineVars({[zIndexVar]: props.graph.zIndex.toString()} )}>
+            <Draggable defaultPosition={{
+                x: props.graph.droppedX,
+                y: props.graph.droppedY
+            }} onStart={zIndexUpdate} defaultClassName={DraggableStyle[fullscreen ? "fullscreen" : "floating"]} handle={"." + Toolbar}>
                 <Resizable defaultSize={{
                     width: "40vw",
                     height: "25vh"
@@ -112,6 +116,10 @@ export default function Graph(props: GraphProps) {
                                     pan: {
                                         enabled: true
                                     }
+                                },
+                                title: {
+                                    display: true,
+                                    text: props.graph.fileName
                                 }
                             },
 
@@ -120,7 +128,7 @@ export default function Graph(props: GraphProps) {
                 </Resizable>
 
             </Draggable>
-        </div>
+        //</div>
 
     ) : (<></>)
 }

@@ -1,10 +1,12 @@
 import * as Menubar from '@radix-ui/react-menubar';
 import { CheckIcon, ChevronRightIcon, DotFilledIcon } from '@radix-ui/react-icons';
 import './styles/MenuBar.css';
-import {useGraphStore} from "../stores/graphes";
+import {useGraphStore, useLocationStore} from "../stores/graphes";
 import {parseCSV} from "../csv/parse";
 const MenubarDemo = () => {
     const add_graph = useGraphStore(state => state.add_graph)
+    const get_location = useLocationStore(state => state.get_spawn_location)
+
     const pickFile = () => {
         var input = document.createElement('input');
         input.type = 'file';
@@ -14,7 +16,8 @@ const MenubarDemo = () => {
             //@ts-ignore
             var file: File = e.target.files[0];
             let data = await parseCSV(file)
-            add_graph(data)
+            let loc = get_location()
+            add_graph(data, file.name, loc[0], loc[1])
         }
     }
 

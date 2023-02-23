@@ -34,6 +34,7 @@ export async function parseCSV(file: File): Promise<ChartData<"scatter">> {
                             borderColor: color,
                             showLine: true,
                             pointStyle: false,
+                            cubicInterpolationMode: "monotone"
                         })
                     }
 

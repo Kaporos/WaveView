@@ -3,7 +3,9 @@ export const zIndexVar = createVar();
 
 export const DraggableStyle = styleVariants({
     floating: {
-        zIndex: zIndexVar
+        zIndex: zIndexVar,
+        //@ts-ignore (for !important)
+        position: "absolute !important",
     },
     fullscreen: {
         transform: "none !important",
