@@ -1,13 +1,10 @@
 import { defineConfig } from 'vite'
-import preact from '@preact/preset-vite'
+import react from '@vitejs/plugin-react'
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [preact()],
-  resolve: {
-    alias: {
-      react: 'preact/compat',
-      'react-dom': 'preact/compat'
-    }
-  }
+  plugins: [react(), vanillaExtractPlugin({
+    identifiers: "debug"
+  })],
 })
