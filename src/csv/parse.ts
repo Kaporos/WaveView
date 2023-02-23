@@ -15,7 +15,7 @@ export async function parseCSV(file: File): Promise<ChartData<"scatter">> {
                 return
             }
             const data: string = reader.result
-            let lines = data.replace("\r","").split("\n").filter((x,i) => i % 3 == 0)
+            let lines = data.replace("\r","").split("\n")
             console.log(lines[0])
             let graphData: ChartDataset<"scatter">[] = []
             lines.forEach((line: string) => {
@@ -34,7 +34,6 @@ export async function parseCSV(file: File): Promise<ChartData<"scatter">> {
                             borderColor: color,
                             showLine: true,
                             pointStyle: false,
-                            cubicInterpolationMode: "monotone"
                         })
                     }
 

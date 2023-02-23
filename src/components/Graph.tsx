@@ -19,6 +19,7 @@ import {Resizable} from "re-resizable";
 import {GraphWindow, useGraphStore} from "../stores/graphes";
 import {assignInlineVars} from "@vanilla-extract/dynamic";
 import SettingsModal from "./SettingsModal";
+import {set} from "react-hook-form";
 
 const plugin = {
     id: 'customCanvasBackgroundColor',
@@ -47,6 +48,7 @@ export default function Graph(props: GraphProps) {
     const [, updateState] = useState();
     //@ts-ignore
     const forceUpdate = useCallback(() => updateState({}), []);
+    const [settingsOpen, setSettingsOpen] = useState(false);
     const [fullscreen, setFullscreen] = useState(false)
     const [graphs, update_graph] = useGraphStore(state => [state.graphs, state.update_graph])
     const downloadGraph = () => {
@@ -78,8 +80,9 @@ export default function Graph(props: GraphProps) {
     }
 
 
+
     return !destroyed ? (
-        //<div style={assignInlineVars({[zIndexVar]: props.graph.zIndex.toString()} )}>
+        <div style={assignInlineVars({[zIndexVar]: props.graph.zIndex.toString()} )}>
             <Draggable defaultPosition={{
                 x: props.graph.droppedX,
                 y: props.graph.droppedY
@@ -91,7 +94,7 @@ export default function Graph(props: GraphProps) {
                     <div className={GraphContainer[fullscreen ? "fullscreen" : "floating"]} >
                         <div className={Toolbar}>
                             <div>
-                                <GearIcon className={Icon}/>
+                                <GearIcon onClick={() => {setSettingsOpen(true)}} className={Icon}/>
                                 {fullscreen
                                     ?
                                     <ExitFullScreenIcon onClick={() => {setFullscreen(false)}} className={Icon}/>
@@ -104,7 +107,13 @@ export default function Graph(props: GraphProps) {
 
                             <button className={Button} onClick={downloadGraph}>Download picture</button>
                         </div>
-                        <Scatter ref={chartRef} data={props.graph.data} options={{
+                        <Scatter ref={chartRef} data={{
+                            datasets: props.graph.data.datasets.map(x => {
+                                let t = Object.assign({}, x)
+                                t.data = t.data.filter((_, i) => i % props.graph.precision == 0)
+                                return t
+                            })
+                        }} options={{
                             plugins: {
                                 zoom: {
                                     zoom: {
@@ -119,16 +128,40 @@ export default function Graph(props: GraphProps) {
                                 },
                                 title: {
                                     display: true,
-                                    text: props.graph.fileName
+                                    text: props.graph.title
                                 }
                             },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: props.graph.xLabel,
+                                        font: {
+                                            family: "Lato",
+                                            size: 14
+                                        }
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: props.graph.yLabel,
+                                        font: {
+                                            family: "Lato",
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            },
+                            animation: false
 
                         }}/>
                     </div>
                 </Resizable>
 
             </Draggable>
-        //</div>
+            <SettingsModal graph={props.graph} setOpen={setSettingsOpen} isOpen={settingsOpen}/>
+        </div>
 
     ) : (<></>)
 }

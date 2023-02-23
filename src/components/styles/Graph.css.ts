@@ -48,8 +48,9 @@ export const Toolbar = style({
     justifyContent: "space-between",
     padding: "15px",
     ":hover": {
-        cursor: "grab"
-    }
+        cursor: "grab",
+    },
+
 
 })
 

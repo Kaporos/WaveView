@@ -6,16 +6,22 @@ export class GraphWindow {
     data: ChartData<"scatter">;
     index: number
     zIndex: number
-    fileName: string
+    title: string
     droppedX: number
     droppedY: number
+    xLabel: string
+    yLabel: string
+    precision: number
     constructor(data: ChartData<"scatter">, index: number, fileName: string, dx: number, dy: number) {
         this.data = data;
         this.zIndex = 1;
         this.index = index
-        this.fileName = fileName
+        this.title = fileName
         this.droppedX = dx
         this.droppedY = dy
+        this.xLabel = ""
+        this.yLabel = ""
+        this.precision = 3
     }
 }
 
