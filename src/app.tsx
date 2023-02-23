@@ -11,8 +11,6 @@ function App() {
     const [graphs, add_graph] = useGraphStore(state => [state.graphs, state.add_graph]); //Retrieving csv
     const [, updateState] = useState();
     const get_location = useLocationStore(state => state.get_spawn_location)
-
-
     return (
     <>
         <MenuBar/>

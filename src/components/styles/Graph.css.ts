@@ -46,7 +46,10 @@ export const GraphContainer = styleVariants({
 export const Toolbar = style({
     display:"flex",
     justifyContent: "space-between",
-    padding: "15px"
+    padding: "15px",
+    ":hover": {
+        cursor: "grab"
+    }
 
 })
 
