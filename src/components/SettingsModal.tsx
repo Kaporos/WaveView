@@ -2,7 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import "./styles/Dialog.css"
 import {Cross2Icon} from "@radix-ui/react-icons";
 import {GraphWindow, useGraphStore} from "../stores/graphes";
-import {useForm} from "react-hook-form";
+import {useFieldArray, useForm} from "react-hook-form";
 import * as Slider from '@radix-ui/react-slider';
 interface SettingsProps {
     isOpen: boolean,
@@ -14,17 +14,43 @@ type SettingsData = {
     title: string,
     yAxis: string,
     xAxis: string
-    precision: number
+    precision: number,
+    dataSources: {
+        name: string,
+        color: string,
+        enabled: boolean
+    }[]
 }
 
 export default function SettingsModal(props: SettingsProps) {
-    const {register, setValue, handleSubmit, formState: {errors}} = useForm<SettingsData>();
+    const {register, setValue, handleSubmit, formState: {errors}, control} = useForm<SettingsData>({
+        defaultValues: {
+            title: props.graph.title,
+            yAxis: props.graph.yLabel,
+            xAxis: props.graph.xLabel,
+            precision: props.graph.precision,
+            //@ts-ignore
+            dataSources: props.graph.data.datasets.map(x => (
+                {
+                    name: x.label,
+                    color: x.borderColor,
+                    enabled: true
+            }))
+        }
+    });
+    const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+        control, // control props comes from useForm (optional: if you are using FormContext)
+        name: "dataSources", // unique name for your Field Array
+    });
     const update_graph = useGraphStore(state => state.update_graph)
     const onSubmit = handleSubmit((data) => {
         props.graph.title = data.title;
         props.graph.xLabel = data.xAxis;
         props.graph.yLabel = data.yAxis;
-        props.graph.precision = data.precision;
+        props.graph.precision = data.precision > 0 ? data.precision : props.graph.precision;
+        data.dataSources.forEach((d, i) => {
+            props.graph.data.datasets[i].label = d.name
+        })
         update_graph(props.graph)
         props.setOpen(false);
     });
@@ -42,13 +68,13 @@ export default function SettingsModal(props: SettingsProps) {
                         <label className="Label" htmlFor="name">
                             Graph Title
                         </label>
-                        <input className="Input" id="name" defaultValue={props.graph.title} {...register("title")} />
+                        <input className="Input" id="name" {...register("title")} />
                     </fieldset>
                     <fieldset className="Fieldset">
                         <label className="Label" htmlFor="xAxis">
                             X Label
                         </label>
-                        <input className="Input" id="xAxis" defaultValue="" placeholder={"Nothing by default"} {...register("xAxis")} />
+                        <input className="Input" id="xAxis" placeholder={"Nothing by default"} {...register("xAxis")} />
                     </fieldset>
                     <fieldset className="Fieldset">
                         <label className="Label" htmlFor="yAxis">
@@ -58,7 +84,7 @@ export default function SettingsModal(props: SettingsProps) {
                     </fieldset>
                     <fieldset className="Fieldset">
                         <label className="Label" htmlFor="precision">
-                            Précision
+                            Precision
                         </label>
                         <Slider.Root onValueChange={(val: number[]) => {
                             setValue("precision", 15 - val[0] + 1)
@@ -68,6 +94,18 @@ export default function SettingsModal(props: SettingsProps) {
                             </Slider.Track>
                             <Slider.Thumb className="SliderThumb" />
                         </Slider.Root>
+
+                    </fieldset>
+                    <fieldset>
+                        <label className="Label" htmlFor="precision">
+                            Data sources
+                        </label>
+                        {fields.map((field, index) => (
+
+                            <fieldset className="Fieldset">
+                                <input className="Input" {...register(`dataSources.${index}.name`)} />
+                            </fieldset>
+                        ))}
 
                     </fieldset>
                     <div style={{ display: 'flex', marginTop: 25, justifyContent: 'flex-end' }}>

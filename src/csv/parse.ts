@@ -15,13 +15,14 @@ export async function parseCSV(file: File): Promise<ChartData<"scatter">> {
                 return
             }
             const data: string = reader.result
+            let separator = data.includes("\t") ? "\t" : ";";
             let lines = data.replace("\r","").split("\n")
             console.log(lines[0])
             let graphData: ChartDataset<"scatter">[] = []
             lines.forEach((line: string) => {
                 let charts: string[];
                 let x: string;
-                [x, ...charts] = line.split(";")
+                [x, ...charts] = line.split(separator)
                 charts.forEach((chart, index) => {
                     if (graphData.length < index + 1){
                         let letter = String.fromCharCode(65 + index)
@@ -43,7 +44,6 @@ export async function parseCSV(file: File): Promise<ChartData<"scatter">> {
                     }
                 })
             })
-            console.log(graphData)
             resolve({
                 datasets: graphData
             })

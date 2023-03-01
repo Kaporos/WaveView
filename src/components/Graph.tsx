@@ -80,6 +80,9 @@ export default function Graph(props: GraphProps) {
     }
 
 
+    useEffect(() => {
+        console.log("Recomputing")
+    })
 
     return !destroyed ? (
         <div style={assignInlineVars({[zIndexVar]: props.graph.zIndex.toString()} )}>

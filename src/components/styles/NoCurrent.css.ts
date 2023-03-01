@@ -17,7 +17,8 @@ export const dropDashedBox = style({
     height: "30vh",
     width: "30vw",
     textAlign: "center",
-    border: "5px dashed rgba(0,0,0,0.5)"
+    border: "5px dashed rgba(0,0,0,0.5)",
+
 })
 /*
 .noCurrent {

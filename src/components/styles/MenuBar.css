@@ -66,6 +66,9 @@ button {
     position: relative;
     user-select: none;
 }
+MenubarItem:hover, .MenubarSubTrigger:hover {
+    cursor:pointer;
+}
 
 .MenubarItem.inset,
 .MenubarSubTrigger.inset,

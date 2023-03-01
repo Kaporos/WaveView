@@ -12,7 +12,8 @@ export default function DropZone(props: DropProps) {
         onDrop: props.onDrop,
         noClick: true,
         accept: {
-            "text/csv": [".csv"]
+            "text/csv": [".csv"],
+            "text/plain": [".txt"]
         }
     })
     return (
