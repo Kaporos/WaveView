@@ -33,8 +33,8 @@ export default function Disclaimer(props: DisclaimerProps) {
                                 <p>There's a few things to know if you're going to use this website.</p>
                                 <p>First things first, the format of files used here.</p>
                                 <p>Please, use <b>Text (Tab delimited)</b>  file format. CSV works well too, but Pico 7 (maybe 6 too) have a bug using CSV on an european computer</p>
-                                <p>Pico export CSV files with comma (<b>,</b>) as a separator...and for decimal points "," are used too ! So it just make unreadable file (or hardly)</p>
-                                <p>Things like that: <code>-3,55,4,20,0,8</code></p>
+                                <p>Pico export CSV files with comma (<b>,</b>) as a separator...and for decimal points "," are used too ! So it just make unreadable file (or in a hard way)</p>
+                                <p>It outputs things like that: <code>-3,55,4,20,0,8</code></p>
                                 <p>Instead of: <code>-3.55,4.20,0.8</code></p>
                                 <h4>To avoid that, use <b>Text (Tab delimited)</b>  format ! </h4>
                             </>
